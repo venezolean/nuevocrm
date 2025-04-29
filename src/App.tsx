@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 import { useAuth, AuthProvider } from './contexts/AuthContext';
@@ -30,11 +30,34 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
 // App layout with navbar and sidebar
 const AppLayout = ({ children }: { children: React.ReactNode }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  
+
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
   };
-  
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia('(min-width: 1024px)'); // lg breakpoint
+
+    // Si estamos en escritorio, abre el sidebar
+    if (mediaQuery.matches) {
+      setIsSidebarOpen(true);
+    }
+
+    // Escuchar cambios de tamaño de pantalla
+    const handleResize = (event: MediaQueryListEvent) => {
+      if (event.matches) {
+        setIsSidebarOpen(true);
+      } else {
+        setIsSidebarOpen(false);
+      }
+    };
+
+    mediaQuery.addEventListener('change', handleResize);
+
+    // Limpiar el listener al desmontar
+    return () => mediaQuery.removeEventListener('change', handleResize);
+  }, []);
+
   return (
     <div className="flex min-h-screen bg-neutral-50">
       <Navbar toggleSidebar={toggleSidebar} isOpen={isSidebarOpen} />
@@ -45,6 +68,7 @@ const AppLayout = ({ children }: { children: React.ReactNode }) => {
     </div>
   );
 };
+
 
 function App() {
   return (
