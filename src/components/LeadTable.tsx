@@ -1,4 +1,5 @@
 import { ChangeEvent, useState } from 'react';
+import { QuickInteractionPanel } from './LeadTableInt';
 import {
   Table,
   TableBody,
@@ -396,7 +397,14 @@ export function LeadTable() {
                     </div>
                   </div>
                 )}
-
+              {selectedLead && (
+                <div className="mt-4">
+                  <h4 className="text-sm font-medium mb-2">Registrar interacción rápida:</h4>
+                  <QuickInteractionPanel
+                    clientId={selectedLead.id}
+                  />
+                </div>
+              )}
                 <div>
                   <h3 className="text-sm font-medium text-neutral-500 mb-1">Estado</h3>
                   {selectedLead.client_id ? (

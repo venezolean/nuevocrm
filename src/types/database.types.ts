@@ -278,7 +278,20 @@ export interface Database {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      insert_client_interaction: {
+        Args: {
+          p_client_id: string;
+          p_seller_id: string | null;
+          p_interaction_date: string;
+          p_types: string[];
+          p_reason: string;
+          p_vehicle: string | null;
+          p_stage: string | null;
+          p_notes: string | null;
+        };
+        Returns: null;
+      };
+      /* ... otras funciones ... */
     }
     Enums: {
       [_ in never]: never
