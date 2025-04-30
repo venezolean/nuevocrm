@@ -273,23 +273,86 @@ export interface Database {
         }
         Relationships: []
       }
+      lead_followups: {
+        Row: {
+          id: string;
+          contact_request_id: string;
+          seller_id: string | null;
+          followup_date: string;
+          contact_date: string;
+          contact_time: string;
+          reason: string;
+          notes: string | null;
+        };
+        Insert: {
+          id?: string;
+          contact_request_id: string;
+          seller_id?: string | null;
+          followup_date?: string;
+          contact_date?: string;
+          contact_time?: string;
+          reason: string;
+          notes?: string | null;
+        };
+        Update: {
+          id?: string;
+          contact_request_id?: string;
+          seller_id?: string | null;
+          followup_date?: string;
+          contact_date?: string;
+          contact_time?: string;
+          reason?: string;
+          notes?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "lead_followups_contact_request_id_fkey";
+            columns: ["contact_request_id"];
+            referencedRelation: "contact_requests";
+            referencedColumns: ["id"];
+            isOneToOne: false;
+          },
+          {
+            foreignKeyName: "lead_followups_seller_id_fkey";
+            columns: ["seller_id"];
+            referencedRelation: "sellers";
+            referencedColumns: ["id"];
+            isOneToOne: false;
+          }
+        ];
+      };
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
+      insert_lead_followup: {
+        Args: {
+          p_request_id: string;
+          p_seller_id?: string | null;
+          p_reason: string;
+          p_notes?: string | null;
+        };
+        Returns: null;
+      };
       insert_client_interaction: {
         Args: {
           p_client_id: string;
-          p_seller_id: string | null;
+          p_seller_id?: string | null;
           p_interaction_date: string;
           p_types: string[];
           p_reason: string;
-          p_vehicle: string | null;
-          p_stage: string | null;
-          p_notes: string | null;
+          p_vehicle?: string | null;
+          p_stage?: string | null;
+          p_notes?: string | null;
         };
         Returns: null;
+      };
+      convert_lead_to_client: {
+        Args: {
+          p_request_id: string;
+        };
+        Returns: string | null; // devuelve el client_id o null si no lo convierte
       };
       /* ... otras funciones ... */
     }
